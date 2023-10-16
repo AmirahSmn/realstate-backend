@@ -1,4 +1,5 @@
 const { body } = require("express-validator");
+const { checkForSite } = require("./validate");
 
 const createBlogSchema = [
   body("title").trim().notEmpty(),
@@ -15,7 +16,7 @@ const updateBlogSchema = [
 const createSiteSchema = [
   body("title").trim().notEmpty(),
   body("image").trim().notEmpty(),
-  body("readTime").trim().notEmpty(),
+  body("location").trim().notEmpty(),
 ];
 
 const updateSiteSchema = [
@@ -30,10 +31,52 @@ const createContactSchema = [
   body("subject").trim().notEmpty(),
   body("message").trim().notEmpty(),
 ];
+const updateContactSchema = [
+  body("name").optional().trim().notEmpty(),
+  body("email").optional().trim().notEmpty(),
+  body("subject").optional().trim().notEmpty(),
+  body("message").optional().trim().notEmpty(),
+];
 
 const createUserSchema = [
   body("username").trim().notEmpty(),
   body("password").trim().notEmpty(),
+];
+
+const createPropertySchema = [
+  body("name").trim().notEmpty(),
+  body("price").isNumeric(),
+  body("size").isNumeric(),
+  body("bedRoom").isNumeric(),
+  body("bathRoom").isNumeric(),
+  body("buildingStatus").trim().notEmpty(),
+  body("sellingStatus").trim().notEmpty(),
+  body("floorPlans").isArray(),
+  body("description").trim().notEmpty(),
+  body("mapLocation").trim().notEmpty(),
+  body("propertyImage").trim().notEmpty(),
+  body("siteName").trim().notEmpty(),
+  body("siteId").isNumeric().custom(checkForSite),
+];
+
+const updatePropertySchema = [
+  body("name").optional().trim().notEmpty(),
+  body("price").optional().isNumeric(),
+  body("size").optional().isNumeric(),
+  body("bedRoom").optional().isNumeric(),
+  body("bathRoom").optional().isNumeric(),
+  body("buildingStatus").optional().trim().notEmpty(),
+  body("sellingStatus").optional().trim().notEmpty(),
+  body("description").optional().trim().notEmpty(),
+  body("mapLocation").optional().trim().notEmpty(),
+  body("propertyImage").optional().trim().notEmpty(),
+  body("siteId").optional().trim().notEmpty().custom(checkForSite),
+];
+
+const createFloorPlanSchema = [body("image").trim().notEmpty()];
+const updateFloorPlanSchema = [
+  body("image").trim().notEmpty(),
+  body("id").trim().notEmpty(),
 ];
 
 module.exports = {
@@ -43,4 +86,9 @@ module.exports = {
   updateSiteSchema,
   createContactSchema,
   createUserSchema,
+  createPropertySchema,
+  updatePropertySchema,
+  updateContactSchema,
+  createFloorPlanSchema,
+  updateFloorPlanSchema,
 };

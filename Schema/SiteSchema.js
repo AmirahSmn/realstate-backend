@@ -5,7 +5,7 @@ const SiteSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  asset: {
+  siteImage: {
     url: { type: String, trim: true },
     id: {
       type: String,

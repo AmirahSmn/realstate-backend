@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const User = require("../Schema/UserSchema");
 const jwt = require("jsonwebtoken");
+const Site = require("../Schema/SiteSchema");
 const validate = (req) => {
   const errors = validationResult(req);
   return errors;
@@ -33,4 +34,14 @@ const verifyRequestMiddleWare = async (req, res, next) => {
     return res.status(401).json({ msg: "please login!" });
   }
 };
-module.exports = { validate, verifyRequestMiddleWare };
+
+const checkForSite = async (value, { req }) => {
+  const { id } = req.params;
+  const { siteName } = req.body;
+  const site = await Site.findById({ _id: id });
+  if (!site) {
+    throw new Error("Site not found.");
+  }
+  req.site = site;
+};
+module.exports = { validate, verifyRequestMiddleWare, checkForSite };

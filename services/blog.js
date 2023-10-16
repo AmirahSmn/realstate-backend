@@ -3,6 +3,7 @@ const createBlogService = async (req, res) => {
   try {
     const { title, body, readTime } = req.body;
     const blog = await Blog.create({ title, body, readTime });
+
     return res.status(201).json({ msg: "Blog successfully created.", blog });
   } catch (err) {
     return res.status(500).json({ msg: "Failed to create blog." });

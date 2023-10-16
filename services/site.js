@@ -3,18 +3,15 @@ const { uploadImage, deleteImage } = require("../cloudinary");
 
 const createSiteService = async (req, res) => {
   try {
-    const { image, title, readTime } = req.body;
-    const result = await uploadImage(image);
-    const { public_id, secure_url } = result;
-    await Site.create({
-      title: "title",
-      location: "titile",
-      asset: {
-        url: secure_url,
-        id: public_id,
-      },
+    const { image, title, location } = req.body;
+    const { public_id, secure_url } = await uploadImage(image);
+
+    const site = await Site.create({
+      title,
+      location,
+      siteImage: { id: public_id, url: secure_url },
     });
-    return res.status(200).json({ success: true, result });
+    return res.status(201).json({ msg: "Site successfully created.", site });
   } catch (err) {
     return res.status(500).json({
       msg: "Failed to create site.",
@@ -33,11 +30,11 @@ const deleteSiteService = async (req, res) => {
         .status(404)
         .json({ msg: "Site not found.", location: "", path: "", type: "" });
     }
-    const { asset } = site;
+    const { siteImage } = site;
 
-    await deleteImage(asset.id);
+    await deleteImage(siteImage.id);
     await Site.deleteOne({ _id: id });
-    return res.status(204).json({ msg: "Site successfully deleted." });
+    return res.status(204).json();
   } catch (err) {
     return res.status(500).json({
       msg: "Failed to delete site.",
@@ -50,23 +47,21 @@ const deleteSiteService = async (req, res) => {
 const updateSiteService = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, image, location } = req.body;
-    const site = await Site.findById({ _id: id });
+    const { siteImage, others } = req.body;
+    let site = await Site.findById({ _id: id });
     if (!site) {
       return res
         .status(404)
         .json({ msg: "Site not found.", location: "", path: "", type: "" });
     }
-    const { asset } = site;
 
-    await deleteImage(asset.id);
-    const result = await uploadImage(image);
-    const { public_id, secure_url } = result;
-    const newSite = await Site.findOneAndUpdate(
-      { _id: id },
-      { title, location, asset: { id: public_id, url: secure_url } },
-      { new: true }
-    );
+    if (siteImage) {
+      await deleteImage(site.siteImage.id);
+      const { public_id, secure_url } = await uploadImage(siteImage);
+      site.siteImage = { id: public_id, url: secure_url };
+    }
+    site = { ...site, ...others };
+    await site.save();
     return res
       .status(200)
       .json({ msg: "Site successfully updated.", site: newSite });
@@ -105,7 +100,7 @@ const getSingleSiteService = async (req, res) => {
     return res.status(200).json({ site });
   } catch (err) {
     return res.status(500).json({
-      msg: "Failed to retrieve sites.",
+      msg: "Failed to retrieve site.",
       location: "",
       path: "",
       type: "",

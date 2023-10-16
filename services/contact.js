@@ -7,6 +7,26 @@ const getAllContactService = async (req, res) => {
     return res.status(500).json({ msg: "Failed to fetch all contacts." });
   }
 };
+const updateContactService = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const contact = await Contact.findById({ _id: id });
+    if (!contact) {
+      return res
+        .status(404)
+        .json({ msg: "Contact not found.", path: "", location: "", type: "" });
+    }
+    const updatedContact = await Contact.findOneAndUpdate(
+      { _id: id },
+      { ...req.body }
+    );
+    return res
+      .status(200)
+      .json({ msg: "Contact successfully updated.", contact: updatedContact });
+  } catch (err) {
+    return res.status(500).json({ msg: "Failed to fetch all contacts." });
+  }
+};
 
 const createContactService = async (req, res) => {
   try {
@@ -51,4 +71,5 @@ module.exports = {
   createContactService,
   getSingleContactService,
   deleteContactService,
+  updateContactService,
 };
