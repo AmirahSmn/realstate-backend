@@ -8,15 +8,17 @@ const sitesRouter = require("./routes/site");
 const contactsRouter = require("./routes/contact");
 const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
+const propertyRouter = require("./routes/property");
+
 require("dotenv").config();
 app.use(express.json());
 app.use(cors());
-
 app.use("/api/blog", blogsRouter);
 app.use("/api/site", sitesRouter);
 app.use("/api/contact", contactsRouter);
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/property", propertyRouter);
 
 const start = async () => {
   try {

@@ -36,12 +36,16 @@ const verifyRequestMiddleWare = async (req, res, next) => {
 };
 
 const checkForSite = async (value, { req }) => {
-  const { id } = req.params;
-  const { siteName } = req.body;
-  const site = await Site.findById({ _id: id });
-  if (!site) {
+  const { siteId } = req.body;
+
+  try {
+    const site = await Site.findById({ _id: siteId });
+    if (!site) {
+      throw new Error("Site not found.");
+    }
+    req.site = site;
+  } catch (err) {
     throw new Error("Site not found.");
   }
-  req.site = site;
 };
 module.exports = { validate, verifyRequestMiddleWare, checkForSite };

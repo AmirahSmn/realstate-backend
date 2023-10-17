@@ -47,7 +47,7 @@ const deleteSiteService = async (req, res) => {
 const updateSiteService = async (req, res) => {
   try {
     const { id } = req.params;
-    const { siteImage, others } = req.body;
+    const { siteImage, title, location } = req.body;
     let site = await Site.findById({ _id: id });
     if (!site) {
       return res
@@ -60,12 +60,16 @@ const updateSiteService = async (req, res) => {
       const { public_id, secure_url } = await uploadImage(siteImage);
       site.siteImage = { id: public_id, url: secure_url };
     }
-    site = { ...site, ...others };
-    await site.save();
+
+    title && (site.title = title);
+    location && (site.location = location);
+
+    const newSite = await site.save();
     return res
       .status(200)
       .json({ msg: "Site successfully updated.", site: newSite });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       msg: "Failed to update site.",
       location: "",

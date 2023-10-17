@@ -3,6 +3,7 @@ const {
   deleteSiteService,
   getAllSitesService,
   getSingleSiteService,
+  updateSiteService,
 } = require("../services/site");
 const { validate } = require("../validation/validate");
 

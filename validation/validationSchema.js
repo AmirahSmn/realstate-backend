@@ -46,23 +46,21 @@ const createUserSchema = [
 const createPropertySchema = [
   body("name").trim().notEmpty(),
   body("price").isNumeric(),
-  body("size").isNumeric(),
+  body("size").trim().notEmpty(),
   body("bedRoom").isNumeric(),
   body("bathRoom").isNumeric(),
   body("buildingStatus").trim().notEmpty(),
   body("sellingStatus").trim().notEmpty(),
-  body("floorPlans").isArray(),
   body("description").trim().notEmpty(),
   body("mapLocation").trim().notEmpty(),
   body("propertyImage").trim().notEmpty(),
-  body("siteName").trim().notEmpty(),
-  body("siteId").isNumeric().custom(checkForSite),
+  body("siteId").trim().notEmpty().custom(checkForSite),
 ];
 
 const updatePropertySchema = [
   body("name").optional().trim().notEmpty(),
   body("price").optional().isNumeric(),
-  body("size").optional().isNumeric(),
+  body("size").optional().trim().notEmpty(),
   body("bedRoom").optional().isNumeric(),
   body("bathRoom").optional().isNumeric(),
   body("buildingStatus").optional().trim().notEmpty(),

@@ -50,3 +50,4 @@ router
     updateFloorPlanController
   )
   .delete(verifyRequestMiddleWare, deleteFloorPlanController);
+module.exports = router;

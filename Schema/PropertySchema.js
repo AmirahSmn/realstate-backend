@@ -9,7 +9,7 @@ const PropertySchema = new mongoose.Schema({
     type: Number,
   },
   size: {
-    type: Number,
+    type: String,
   },
   buildingStatus: {
     type: String,
@@ -35,7 +35,7 @@ const PropertySchema = new mongoose.Schema({
   mapLocation: { type: String },
   siteName: { type: String },
   siteId: {
-    type: Number,
+    type: String,
   },
 });
 

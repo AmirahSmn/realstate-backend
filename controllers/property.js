@@ -6,6 +6,7 @@ const {
   createFloorPlanService,
   updateFloorPlanService,
   deleteFloorPlanService,
+  getSinglePropertyService,
 } = require("../services/property");
 const { validate } = require("../validation/validate");
 

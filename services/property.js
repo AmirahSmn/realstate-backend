@@ -18,10 +18,16 @@ const getAllPropertiesService = async (req, res) => {
 const getSinglePropertyService = async (req, res) => {
   try {
     const { id } = req.params;
-    const property = await Property.find({ _id: id });
+    const property = await Property.findById({ _id: id });
+    if (!property) {
+      return res
+        .status(404)
+        .json({ msg: "Property not found.", location: "", path: "", type: "" });
+    }
     const site = await Site.findById({ _id: property.siteId });
-    return res.status(200).json({ property, site });
+    return res.status(200).json({ site, property });
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ location: "", path: "", msg: "Failed to retrieve property." });
@@ -38,20 +44,13 @@ const createPropertyService = async (req, res) => {
       bathRoom,
       buildingStatus,
       sellingStatus,
-      floorPlans,
       description,
       mapLocation,
       propertyImage,
       siteId,
     } = req.body;
-    const { siteName } = req.site;
-    let floors = [];
-
-    const image = await uploadImage(propertyImage);
-    for (image in floorPlans) {
-      const { public_id, secure_url } = await uploadImage(image);
-      floors.push({ id: public_id, url: secure_url });
-    }
+    const { title } = req.site;
+    const { public_id, secure_url } = await uploadImage(propertyImage);
     const property = await Property.create({
       name,
       price,
@@ -60,11 +59,10 @@ const createPropertyService = async (req, res) => {
       bathRoom,
       buildingStatus,
       sellingStatus,
-      floorPlans,
       description,
       mapLocation,
-      image,
-      siteName,
+      propertyImage: { id: public_id, url: secure_url },
+      siteName: title,
       siteId,
     });
     return res
@@ -89,14 +87,16 @@ const deletePropertyService = async (req, res) => {
         .status(404)
         .json({ location: "", path: "", type: "", msg: "Property not found." });
     }
+
     await deleteImage(property.propertyImage.id);
     for (image in property.floorPlans) {
-      await deleteImage(image.id);
+      await deleteImage(property.floorPlans[image].id);
     }
     await Property.deleteOne({ _id: id });
 
     return res.status(204).json();
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       msg: "Failed to delete property",
       path: "",
@@ -115,12 +115,18 @@ const updatePropertyService = async (req, res) => {
         .status(404)
         .json({ location: "", path: "", type: "", msg: "Property not found." });
     }
-    const { propertyImage, siteId, ...others } = req.body;
-
+    const { propertyImage, siteId, siteName, ...others } = req.body;
+    let site = await Site.findById({ _id: siteId });
+    if (!site) {
+      return res
+        .status(404)
+        .json({ location: "", path: "", type: "", msg: "Site not found." });
+    }
+    let updates = {};
     if (propertyImage) {
       await deleteImage(property.propertyImage.id);
       const { secure_url, public_id } = await uploadImage(propertyImage);
-      property.propertyImage = { url: secure_url, id: public_id };
+      updates.propertyImage = { url: secure_url, id: public_id };
     }
     if (siteId & (siteId !== property.siteId)) {
       const site = await Site.findById({ _id: siteId });
@@ -129,15 +135,22 @@ const updatePropertyService = async (req, res) => {
           .status(404)
           .json({ msg: "Site not found.", location: "", path: "", type: "" });
       }
-      property.siteId = siteId;
-      property.siteName = site.title;
+      updates.siteId = siteId;
+      updates.siteName = site.title;
     }
-    property = { ...property, ...others };
-    await property.save();
-    return res
-      .status(200)
-      .json({ msg: "Property successfully updated.", property });
+    updates = { ...updates, ...others };
+
+    const updatedProperty = await Property.findOneAndUpdate(
+      { _id: id },
+      { ...updates },
+      { new: true }
+    );
+    return res.status(200).json({
+      msg: "Property successfully updated.",
+      property: updatedProperty,
+    });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       msg: "Failed to update property",
       path: "",
@@ -148,8 +161,8 @@ const updatePropertyService = async (req, res) => {
 };
 const createFloorPlanService = async (req, res) => {
   try {
-    const { id } = req.params;
-    let property = await Property.findById({ _id: id });
+    const { propertyId } = req.body;
+    let property = await Property.findById({ _id: propertyId });
     if (!property) {
       return res
         .status(404)
@@ -165,8 +178,9 @@ const createFloorPlanService = async (req, res) => {
       floorPlan: { url: secure_url, id: public_id },
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      msg: "Failed to delete floor plan.",
+      msg: "Failed to create floor plan.",
       path: "",
       location: "",
       type: "",
@@ -186,14 +200,12 @@ const updateFloorPlanService = async (req, res) => {
     const { image } = req.body;
     const plan = property.floorPlans.find((plan) => plan.id === req.body.id);
     if (!plan) {
-      return res
-        .status(404)
-        .json({
-          location: "",
-          path: "",
-          type: "",
-          msg: "Floor plan not found.",
-        });
+      return res.status(404).json({
+        location: "",
+        path: "",
+        type: "",
+        msg: "Floor plan not found.",
+      });
     }
     await deleteImage(req.body.id);
     const { secure_url, public_id } = await uploadImage(image);
@@ -226,7 +238,17 @@ const deleteFloorPlanService = async (req, res) => {
         .status(404)
         .json({ location: "", path: "", type: "", msg: "Property not found." });
     }
-
+    const floorPlan = property.floorPlans.find(
+      (plan) => plan.id === req.body.id
+    );
+    if (!floorPlan) {
+      return res.status(404).json({
+        location: "",
+        path: "",
+        type: "",
+        msg: "Floor plan not found.",
+      });
+    }
     await deleteImage(req.body.id);
 
     const floorPlans = property.floorPlans.filter(
@@ -235,9 +257,7 @@ const deleteFloorPlanService = async (req, res) => {
 
     property.floorPlans = floorPlans;
     await property.save();
-    return res
-      .status(200)
-      .json({ msg: "Floor plan successfully deleted.", floorPlans });
+    return res.status(204).json();
   } catch (error) {
     return res.status(500).json({
       msg: "Failed to delete floor plan.",
