@@ -3,13 +3,17 @@ const { uploadImage, deleteImage } = require("../cloudinary");
 
 const createSiteService = async (req, res) => {
   try {
-    const { image, title, location } = req.body;
+    const { image, title, location, featured, featuredStatement, remark } =
+      req.body;
     const { public_id, secure_url } = await uploadImage(image);
 
     const site = await Site.create({
       title,
       location,
       siteImage: { id: public_id, url: secure_url },
+      featured,
+      featuredStatement,
+      remark,
     });
     return res.status(201).json({ msg: "Site successfully created.", site });
   } catch (err) {
@@ -47,7 +51,8 @@ const deleteSiteService = async (req, res) => {
 const updateSiteService = async (req, res) => {
   try {
     const { id } = req.params;
-    const { siteImage, title, location } = req.body;
+    const { siteImage, title, location, featured, featuredStatement } =
+      req.body;
     let site = await Site.findById({ _id: id });
     if (!site) {
       return res
@@ -63,6 +68,9 @@ const updateSiteService = async (req, res) => {
 
     title && (site.title = title);
     location && (site.location = location);
+    featured && (site.featured = featured);
+    featuredStatement && (site.featuredStatement = featuredStatement);
+    remark && (site.remark = remark);
 
     const newSite = await site.save();
     return res
