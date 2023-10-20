@@ -17,6 +17,7 @@ const createSiteSchema = [
   body("title").trim().notEmpty(),
   body("image").trim().notEmpty(),
   body("location").trim().notEmpty(),
+  body("locationName").trim().notEmpty(),
   body("featured").optional().isBoolean(),
   body("remark").optional().trim().notEmpty(),
   body("featuredStatement").optional().trim().notEmpty(),
@@ -25,6 +26,7 @@ const createSiteSchema = [
 const updateSiteSchema = [
   body("title").optional().trim().notEmpty(),
   body("location").optional().trim().notEmpty(),
+  body("locationName").optional().trim().notEmpty(),
   body("image").optional().trim().notEmpty(),
   body("featured").optional().isBoolean(),
   body("remark").optional().trim().notEmpty(),
