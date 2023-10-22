@@ -13,9 +13,10 @@ const createSiteService = async (req, res) => {
       remark,
       locationName,
     });
-    await mailTransporter.sendMail(mailDetails);
+
     return res.status(201).json({ msg: "Site successfully created.", site });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       msg: "Failed to create site.",
       location: "",
