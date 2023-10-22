@@ -167,14 +167,13 @@ const updatePropertyService = async (req, res) => {
 };
 const createFloorPlanService = async (req, res) => {
   try {
-    const { propertyId } = req.body;
+    const { propertyId, image } = req.body;
     let property = await Property.findById({ _id: propertyId });
     if (!property) {
       return res
         .status(404)
         .json({ location: "", path: "", type: "", msg: "Property not found." });
     }
-    const { image } = req.body;
     const { secure_url, public_id } = await uploadImage(image);
     property.floorPlans.push({ url: secure_url, id: public_id });
     await property.save();

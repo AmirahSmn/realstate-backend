@@ -80,7 +80,10 @@ const updatePropertySchema = [
   body("featuredStatement").optional().trim().notEmpty(),
 ];
 
-const createFloorPlanSchema = [body("image").trim().notEmpty()];
+const createFloorPlanSchema = [
+  body("image").trim().notEmpty(),
+  body("propertyId").trim().notEmpty(),
+];
 const updateFloorPlanSchema = [
   body("image").trim().notEmpty(),
   body("id").trim().notEmpty(),
