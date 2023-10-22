@@ -16,7 +16,6 @@ const SiteSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-
   remark: { type: String, trim: true, default: "" },
 });
 
