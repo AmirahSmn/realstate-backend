@@ -1,28 +1,19 @@
 const Site = require("../Schema/SiteSchema");
 const { uploadImage, deleteImage } = require("../cloudinary");
-
+const mailTransporter = require("../nodeMailer");
 const createSiteService = async (req, res) => {
   try {
-    const {
-      image,
-      title,
-      location,
-      featured,
-      featuredStatement,
-      remark,
-      locationName,
-    } = req.body;
+    const { image, title, location, remark, locationName } = req.body;
     const { public_id, secure_url } = await uploadImage(image);
 
     const site = await Site.create({
       title,
       location,
       siteImage: { id: public_id, url: secure_url },
-      featured,
-      featuredStatement,
       remark,
       locationName,
     });
+    await mailTransporter.sendMail(mailDetails);
     return res.status(201).json({ msg: "Site successfully created.", site });
   } catch (err) {
     return res.status(500).json({
@@ -82,8 +73,6 @@ const updateSiteService = async (req, res) => {
 
     title && (site.title = title);
     location && (site.location = location);
-    featured && (site.featured = featured);
-    featuredStatement && (site.featuredStatement = featuredStatement);
     locationName && (site.locationName = locationName);
     remark && (site.remark = remark);
 

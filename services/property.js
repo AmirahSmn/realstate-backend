@@ -48,6 +48,9 @@ const createPropertyService = async (req, res) => {
       mapLocation,
       propertyImage,
       siteId,
+      featured,
+      featuredStatement,
+      propertyType,
     } = req.body;
     const { title } = req.site;
     const { public_id, secure_url } = await uploadImage(propertyImage);
@@ -64,6 +67,9 @@ const createPropertyService = async (req, res) => {
       propertyImage: { id: public_id, url: secure_url },
       siteName: title,
       siteId,
+      featured: featured ? true : false,
+      featuredStatement,
+      propertyType,
     });
     return res
       .status(201)

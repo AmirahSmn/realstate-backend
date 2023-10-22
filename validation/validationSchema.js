@@ -18,9 +18,7 @@ const createSiteSchema = [
   body("image").trim().notEmpty(),
   body("location").trim().notEmpty(),
   body("locationName").trim().notEmpty(),
-  body("featured").optional().isBoolean(),
   body("remark").optional().trim().notEmpty(),
-  body("featuredStatement").optional().trim().notEmpty(),
 ];
 
 const updateSiteSchema = [
@@ -28,9 +26,7 @@ const updateSiteSchema = [
   body("location").optional().trim().notEmpty(),
   body("locationName").optional().trim().notEmpty(),
   body("image").optional().trim().notEmpty(),
-  body("featured").optional().isBoolean(),
   body("remark").optional().trim().notEmpty(),
-  body("featuredStatement").optional().trim().notEmpty(),
 ];
 
 const createContactSchema = [
@@ -63,6 +59,9 @@ const createPropertySchema = [
   body("mapLocation").trim().notEmpty(),
   body("propertyImage").trim().notEmpty(),
   body("siteId").trim().notEmpty().custom(checkForSite),
+  body("featured").isBoolean(),
+  body("featuredStatement").trim().notEmpty(),
+  body("propertyType").trim().notEmpty(),
 ];
 
 const updatePropertySchema = [
@@ -77,6 +76,8 @@ const updatePropertySchema = [
   body("mapLocation").optional().trim().notEmpty(),
   body("propertyImage").optional().trim().notEmpty(),
   body("siteId").optional().trim().notEmpty().custom(checkForSite),
+  body("featured").optional().isBoolean(),
+  body("featuredStatement").optional().trim().notEmpty(),
 ];
 
 const createFloorPlanSchema = [body("image").trim().notEmpty()];

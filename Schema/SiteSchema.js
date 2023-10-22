@@ -16,8 +16,7 @@ const SiteSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  featured: { type: Boolean, default: false },
-  featuredStatement: { type: String, trim: true, default: "" },
+
   remark: { type: String, trim: true, default: "" },
 });
 

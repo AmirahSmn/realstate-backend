@@ -34,6 +34,12 @@ const PropertySchema = new mongoose.Schema({
   description: { type: String },
   mapLocation: { type: String },
   siteName: { type: String },
+  featured: { type: Boolean, default: false },
+  featuredStatement: { type: String, trim: true, default: "" },
+  propertyType: {
+    type: String,
+    trim: true,
+  },
   siteId: {
     type: String,
   },
