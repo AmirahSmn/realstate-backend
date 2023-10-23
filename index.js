@@ -11,7 +11,7 @@ const authRouter = require("./routes/auth");
 const propertyRouter = require("./routes/property");
 
 require("dotenv").config();
-app.use(express.json());
+app.use(express.json({ limit: "500kb" }));
 app.use(cors());
 app.use("/api/blog", blogsRouter);
 app.use("/api/site", sitesRouter);

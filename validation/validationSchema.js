@@ -17,7 +17,6 @@ const createSiteSchema = [
   body("title").trim().notEmpty(),
   body("image").trim().notEmpty(),
   body("location").trim().notEmpty(),
-  body("remark").trim().notEmpty(),
   body("closed").isBoolean(),
 ];
 
