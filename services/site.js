@@ -3,7 +3,7 @@ const { uploadImage, deleteImage } = require("../cloudinary");
 const mailTransporter = require("../nodeMailer");
 const createSiteService = async (req, res) => {
   try {
-    const { image, title, location, remark } = req.body;
+    const { image, title, location, remark, closed } = req.body;
     const { public_id, secure_url } = await uploadImage(image);
 
     const site = await Site.create({
@@ -11,6 +11,7 @@ const createSiteService = async (req, res) => {
       location,
       siteImage: { id: public_id, url: secure_url },
       remark,
+      closed,
     });
 
     return res.status(201).json({ msg: "Site successfully created.", site });
@@ -50,7 +51,7 @@ const deleteSiteService = async (req, res) => {
 const updateSiteService = async (req, res) => {
   try {
     const { id } = req.params;
-    const { siteImage, title, location } = req.body;
+    const { siteImage, title, location, closed } = req.body;
     let site = await Site.findById({ _id: id });
     if (!site) {
       return res
@@ -67,6 +68,7 @@ const updateSiteService = async (req, res) => {
     title && (site.title = title);
     location && (site.location = location);
     remark && (site.remark = remark);
+    closed && (site.closed = closed);
 
     const newSite = await site.save();
     return res

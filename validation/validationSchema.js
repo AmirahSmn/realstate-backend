@@ -17,7 +17,8 @@ const createSiteSchema = [
   body("title").trim().notEmpty(),
   body("image").trim().notEmpty(),
   body("location").trim().notEmpty(),
-  body("remark").optional().trim().notEmpty(),
+  body("remark").trim().notEmpty(),
+  body("closed").isBoolean(),
 ];
 
 const updateSiteSchema = [
@@ -25,6 +26,7 @@ const updateSiteSchema = [
   body("location").optional().trim().notEmpty(),
   body("image").optional().trim().notEmpty(),
   body("remark").optional().trim().notEmpty(),
+  body("closed").optional().isBoolean(),
 ];
 
 const createContactSchema = [

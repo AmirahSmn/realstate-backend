@@ -17,6 +17,10 @@ const SiteSchema = new mongoose.Schema({
     trim: true,
   },
   remark: { type: String, trim: true, default: "" },
+  closed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Site", SiteSchema);
