@@ -74,7 +74,7 @@ const updatePropertySchema = [
   body("description").optional().trim().notEmpty(),
   body("mapLocation").optional().trim().notEmpty(),
   body("propertyImage").optional().trim().notEmpty(),
-  body("siteId").optional().trim().notEmpty().custom(checkForSite),
+  body("siteId").trim().notEmpty().custom(checkForSite),
   body("featured").optional().isBoolean(),
   body("featuredStatement").optional().trim().notEmpty(),
 ];

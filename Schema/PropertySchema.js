@@ -19,10 +19,10 @@ const PropertySchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  bedroom: {
+  bedRoom: {
     type: Number,
   },
-  bathroom: { type: Number },
+  bathRoom: { type: Number },
   propertyImage: {
     url: { type: String, trim: true },
     id: {

@@ -53,6 +53,7 @@ const createPropertyService = async (req, res) => {
       propertyType,
     } = req.body;
     const { title } = req.site;
+
     const { public_id, secure_url } = await uploadImage(propertyImage);
     const property = await Property.create({
       name,
@@ -75,6 +76,7 @@ const createPropertyService = async (req, res) => {
       .status(201)
       .json({ success: "Property successfully created.", property });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       msg: "Failed to create property",
       path: "",
@@ -121,7 +123,7 @@ const updatePropertyService = async (req, res) => {
         .status(404)
         .json({ location: "", path: "", type: "", msg: "Property not found." });
     }
-    const { propertyImage, siteId, siteName, ...others } = req.body;
+    const { propertyImage, siteId, ...others } = req.body;
     let site = await Site.findById({ _id: siteId });
     if (!site) {
       return res
@@ -134,16 +136,7 @@ const updatePropertyService = async (req, res) => {
       const { secure_url, public_id } = await uploadImage(propertyImage);
       updates.propertyImage = { url: secure_url, id: public_id };
     }
-    if (siteId & (siteId !== property.siteId)) {
-      const site = await Site.findById({ _id: siteId });
-      if (!site) {
-        return res
-          .status(404)
-          .json({ msg: "Site not found.", location: "", path: "", type: "" });
-      }
-      updates.siteId = siteId;
-      updates.siteName = site.title;
-    }
+
     updates = { ...updates, ...others };
 
     const updatedProperty = await Property.findOneAndUpdate(
