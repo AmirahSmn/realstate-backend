@@ -16,7 +16,6 @@ const createSiteService = async (req, res) => {
 
     return res.status(201).json({ msg: "Site successfully created.", site });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({
       msg: "Failed to create site.",
       location: "",
@@ -51,17 +50,16 @@ const deleteSiteService = async (req, res) => {
 const updateSiteService = async (req, res) => {
   try {
     const { id } = req.params;
-    const { siteImage, title, location, closed } = req.body;
+    const { image, title, location, closed, remark } = req.body;
     let site = await Site.findById({ _id: id });
     if (!site) {
       return res
         .status(404)
         .json({ msg: "Site not found.", location: "", path: "", type: "" });
     }
-
-    if (siteImage) {
+    if (image) {
       await deleteImage(site.siteImage.id);
-      const { public_id, secure_url } = await uploadImage(siteImage);
+      const { public_id, secure_url } = await uploadImage(image);
       site.siteImage = { id: public_id, url: secure_url };
     }
 
@@ -75,6 +73,7 @@ const updateSiteService = async (req, res) => {
       .status(200)
       .json({ msg: "Site successfully updated.", site: newSite });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       msg: "Failed to update site.",
       location: "",
