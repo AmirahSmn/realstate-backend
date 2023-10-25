@@ -62,11 +62,14 @@ const updateSiteService = async (req, res) => {
       const { public_id, secure_url } = await uploadImage(image);
       site.siteImage = { id: public_id, url: secure_url };
     }
-
+    console.log(closed);
     title && (site.title = title);
     location && (site.location = location);
     remark && (site.remark = remark);
-    closed && (site.closed = closed);
+
+    if ((closed === true || closed === false) && closed !== site.closed) {
+      site.closed = closed;
+    }
 
     const newSite = await site.save();
     return res

@@ -59,7 +59,7 @@ const createPropertySchema = [
   body("propertyImage").trim().notEmpty(),
   body("siteId").trim().notEmpty().custom(checkForSite),
   body("featured").isBoolean(),
-  body("featuredStatement").trim().notEmpty(),
+  body("featuredStatement").optional().trim().notEmpty(),
   body("propertyType").trim().notEmpty(),
 ];
 
