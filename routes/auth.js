@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../Schema/UserSchema");
 
-const axios = require("axios");
+import axios from 'axios';
 
 axios.get("/login")
   .then(function (response) {
