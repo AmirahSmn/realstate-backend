@@ -5,22 +5,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../Schema/UserSchema");
 
-import axios from 'axios';
-
-axios.get("/login")
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    if (error.response) {
-      console.log('Server responded with status code:', error.response.status);
-      console.log('Response data:', error.response.data);
-    } else if (error.request) {
-      console.log('No response received:', error.request);
-    } else {
-      console.log('Error creating request:', error.message);
-    }
-  });
 router.route("/login").post(async (req, res) => {
   try {
     const errors = validate(req);
