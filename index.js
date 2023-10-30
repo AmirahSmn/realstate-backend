@@ -12,7 +12,8 @@ const propertyRouter = require("./routes/property");
 
 require("dotenv").config();
 app.use(express.json({ limit: "500kb" }));
-app.use(cors());
+app.use(cors({ origin:"https://creative-paletas-65242e.netlify.app/"
+}));
 
 /*app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
