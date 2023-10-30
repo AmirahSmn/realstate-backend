@@ -1,6 +1,6 @@
 const express = require("express");
 const connectDB = require("./connect");
-//const cors = require("cors");
+const cors = require("cors");
 const app = express();
 const port = 4000;
 const blogsRouter = require("./routes/blog");
@@ -12,9 +12,9 @@ const propertyRouter = require("./routes/property");
 
 require("dotenv").config();
 app.use(express.json({ limit: "500kb" }));
-//app.use(cors());
+app.use(cors());
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-
+*/
 app.use("/api/blog", blogsRouter);
 app.use("/api/site", sitesRouter);
 app.use("/api/contact", contactsRouter);
