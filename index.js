@@ -12,11 +12,11 @@ const propertyRouter = require("./routes/property");
 
 require("dotenv").config();
 app.use(express.json({ limit: "500kb" }));
-app.use(cors({ origin:"https://creative-paletas-65242e.netlify.app",
+/*app.use(cors({ origin:"*",
               methodS:["GET", "POST","PATCH", "DELETE"],
 }));
-
-/*app.use((req, res, next) => {
+*/
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -28,7 +28,7 @@ app.use(cors({ origin:"https://creative-paletas-65242e.netlify.app",
   }
   next();
 });
-*/
+
 app.use("/api/blog", blogsRouter);
 app.use("/api/site", sitesRouter);
 app.use("/api/contact", contactsRouter);
