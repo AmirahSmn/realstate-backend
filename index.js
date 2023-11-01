@@ -12,32 +12,16 @@ const propertyRouter = require("./routes/property");
 
 require("dotenv").config();
 app.use(express.json({ limit: "500kb" }));
-/*app.use(cors({
+app.use(cors({
     'allowedHeaders': ['Content-Type'],
-  origin:"https://quiet-fox-49eade.netlify.app",
+  origin:"https://quiet-fox-49eade.netlify.app", "https://creative-paletas-65242e.netlify.app",
   methodS:["GET", "POST","PATCH", "DELETE"],
   'preflightContinue': true ,
 
 }));
-*/
 
-var enableCORS = function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, token, Content-Length, X-Requested-With, *');
-  if ('OPTIONS' === req.method) {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-};
-app.all("/*", function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, token, Content-Length, X-Requested-With, *');
-  next();
-});
-app.use(enableCORS);
+
+
 
 /*
 app.use((req, res, next) => {
