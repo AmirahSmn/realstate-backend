@@ -13,7 +13,11 @@ const propertyRouter = require("./routes/property");
 require("dotenv").config();
 app.use(express.json({ limit: "500kb" }));
 
-app.use(cors());
+app.use(cors({
+             "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Headers" :"*"
+}));
 
 
 
