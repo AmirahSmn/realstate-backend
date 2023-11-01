@@ -12,11 +12,12 @@ const propertyRouter = require("./routes/property");
 
 require("dotenv").config();
 app.use(express.json({ limit: "500kb" }));
+
 app.use(cors({
     'allowedHeaders': ['Content-Type'],
   origin:"https://quiet-fox-49eade.netlify.app", "https://creative-paletas-65242e.netlify.app",
   methodS:["GET", "POST","PATCH", "DELETE"],
-  'preflightContinue': true ,
+  'preflightContinue': 'true' ,
 
 }));
 
