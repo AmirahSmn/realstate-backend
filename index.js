@@ -12,10 +12,14 @@ const propertyRouter = require("./routes/property");
 
 require("dotenv").config();
 app.use(express.json({ limit: "500kb" }));
-/*app.use(cors({ origin:"*",
-              methodS:["GET", "POST","PATCH", "DELETE"],
+app.use(cors({
+    'allowedHeaders': ['Content-Type'],
+  origin:"https://quiet-fox-49eade.netlify.app",
+  methodS:["GET", "POST","PATCH", "DELETE"],
+  'preflightContinue': true ,
+
 }));
-*/
+/*
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -28,7 +32,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-
+*/
 app.use("/api/blog", blogsRouter);
 app.use("/api/site", sitesRouter);
 app.use("/api/contact", contactsRouter);
